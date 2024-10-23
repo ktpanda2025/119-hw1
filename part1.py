@@ -99,9 +99,10 @@ def load_input():
     # columns we are interested in using the NEW_COLUMNS variable above.
     # Make sure you return the columns in the new order.
     # TODO
+    df_2019 = df_2019[['rank', 'university', 'region', 'academic reputation', 'employer reputation', 'faculty student', 'citations per faculty', 'overall score']]
+    df_2020 = df_2020[['rank', 'university', 'region', 'academic reputation', 'employer reputation', 'faculty student', 'citations per faculty', 'overall score']]
+    df_2021 = df_2021[['rank', 'university', 'region', 'academic reputation', 'employer reputation', 'faculty student', 'citations per faculty', 'overall score']]
 
-    # When you are done, remove the next line...
-    raise NotImplementedError
 
     # ...and keep this line to return the dataframes.
     return [df_2019, df_2020, df_2021]
