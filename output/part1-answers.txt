@@ -1,7 +1,7 @@
 q1,3
 q2,True
 q3a,False
-q4,['California Institute of Technology (Caltech)', 'Cornell University', 'University of Texas at Austin', 'University of California, Berkeley (UCB)', 'The University of Sydney']
+q4,['Peking University', 'Ruprecht-Karls-Universität Heidelberg', 'Kyoto University', 'The University of New South Wales (UNSW Sydney)', 'University of Pennsylvania']
 q5a,[100, 100, 100, 100, 100, 100, 100, 100]
 q5b,[100, 100, 100, 100, 100, 100, 100, 100]
 q5c,100
@@ -17,9 +17,9 @@ faculty student              100.0
 citations per faculty        95.95
 overall score                 91.8
 Name: 13, dtype: object
-q12,None
-q13,Not Implemented
-q14a,Not Implemented
+q12,('USA', 'Signapore')
+q13,output/13a.png
+q14a,output/14a.png
 q15,Not Implemented
 q16,Not Implemented
 q17,Not Implemented
@@ -27,4 +27,4 @@ q18,Not Implemented
 q20a,Not Implemented
 q20b,Not Implemented
 q21,Not Implemented
-PART 1,9
+PART 1,7

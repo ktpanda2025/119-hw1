@@ -636,12 +636,16 @@ def q12a(avg_2021,dfs):
 
     q11(avg_2019)
 
+    return "USA","Signapore"
+
 """
 12b.
 Comment on why the country above is at the top of the list.
 (Note: This is an open-ended question.)
 
 === ANSWER Q12b BELOW ===
+
+Becuase it has the highest overall score 
 
 === END OF Q12b ANSWER ===
 """
@@ -661,15 +665,24 @@ import matplotlib.pyplot as plt
 
 def q13a(avg_2021):
     # Plot the box and whisker plot
-    # TODO
-    raise NotImplementedError
-    # return "output/13a.png"
+    plt.size = (40, 40)
+    avg_2021.boxplot(column=['academic reputation', 
+                             'employer reputation', 'faculty student', 'citations per faculty', 'overall score'])
+    plt.tight_layout() 
+    plt.xticks(rotation=15,fontsize=6)
+    plt.savefig('output/13a.png')
+    plt.close()
+    
+
+    return "output/13a.png"
 
 """
 b. Do you observe any anomalies in the box and whisker
 plot?
 
 === ANSWER Q13b BELOW ===
+
+over all score does have an outlier
 
 === END OF Q13b ANSWER ===
 """
@@ -686,14 +699,21 @@ As the answer to this part, return the name of the plot you saved.
 
 def q14a(avg_2021):
     # Enter code here
-    # TODO
-    raise NotImplementedError
-    # return "output/14a.png"
+
+    plt.scatter(avg_2021['academic reputation'], avg_2021['overall score'])
+    plt.xlabel('academic reputation')
+    plt.ylabel('overall score')
+    plt.title('academic reputation vs overall score')
+    plt.savefig('output/14a.png')
+    plt.close()
+   
+    return "output/14a.png"
 
 """
 Do you observe any general trend?
 
 === ANSWER Q14b BELOW ===
+Ya seems like the better the academic reputation the better the overall score
 
 === END OF Q14b ANSWER ===
 
