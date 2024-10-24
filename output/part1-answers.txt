@@ -1,17 +1,23 @@
 q1,3
-q2,Not Implemented
-q3a,Not Implemented
-q4,Not Implemented
-q5a,Not Implemented
-q5b,Not Implemented
-q5c,Not Implemented
-q6c,Not Implemented
-q7,Not Implemented
-q8a,Not Implemented
-q9,Not Implemented
-q10,Not Implemented
-q11,Not Implemented
-q12,Not Implemented
+q2,True
+q3a,False
+q4,['California Institute of Technology (Caltech)', 'Cornell University', 'University of Texas at Austin', 'University of California, Berkeley (UCB)', 'The University of Sydney']
+q5a,[100, 100, 100, 100, 100, 100, 100, 100]
+q5b,[100, 100, 100, 100, 100, 100, 100, 100]
+q5c,100
+q6c,None
+q7,[9, 9, 9]
+q8a,29.0
+q9,[67.041, 67.68, 73.539, 82.147, 75.504]
+q10,5
+q11,region                   Singapore
+academic reputation          82.25
+employer reputation           75.3
+faculty student              100.0
+citations per faculty        95.95
+overall score                 91.8
+Name: 13, dtype: object
+q12,None
 q13,Not Implemented
 q14a,Not Implemented
 q15,Not Implemented
@@ -21,4 +27,4 @@ q18,Not Implemented
 q20a,Not Implemented
 q20b,Not Implemented
 q21,Not Implemented
-PART 1,22
+PART 1,9

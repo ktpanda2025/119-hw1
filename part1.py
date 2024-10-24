@@ -75,7 +75,6 @@ by filling in the parts marked TODO below.
 Return as your answer to q1 the number of dataframes loaded.
 (This part is implemented for you.)
 """
-
 NEW_COLUMNS = ['rank', 'university', 'region', 'academic reputation', 'employer reputation', 'faculty student', 'citations per faculty', 'overall score']
 
 def load_input():
@@ -98,10 +97,9 @@ def load_input():
     # Fill out this part. You can use column access to get only the
     # columns we are interested in using the NEW_COLUMNS variable above.
     # Make sure you return the columns in the new order.
-    # TODO
-    df_2019 = df_2019[['rank', 'university', 'region', 'academic reputation', 'employer reputation', 'faculty student', 'citations per faculty', 'overall score']]
-    df_2020 = df_2020[['rank', 'university', 'region', 'academic reputation', 'employer reputation', 'faculty student', 'citations per faculty', 'overall score']]
-    df_2021 = df_2021[['rank', 'university', 'region', 'academic reputation', 'employer reputation', 'faculty student', 'citations per faculty', 'overall score']]
+    df_2019 = df_2019[ NEW_COLUMNS]
+    df_2020 = df_2020[NEW_COLUMNS]
+    df_2021 = df_2021[ NEW_COLUMNS]
 
 
     # ...and keep this line to return the dataframes.
@@ -141,7 +139,28 @@ def q2(dfs):
     # - the number of rows
     # - the number of columns
     # - the columns are listed in the correct order
-    raise NotImplementedError
+
+
+    df_2019, df_2020, df_2021 = dfs
+
+    part_1 =None
+    part_1 = None
+
+    if df_2019.shape == df_2020.shape  == df_2021.shape:
+        part_1 = True
+    else:
+        part_1 = False
+    
+    if df_2019.columns.tolist() == NEW_COLUMNS and df_2020.columns.tolist()  ==  NEW_COLUMNS and df_2021.columns.tolist() ==  NEW_COLUMNS:
+        part_2 = True
+
+    else:
+        part_2 = False
+    
+    if part_1 and part_2:
+        return True
+    else:
+        return False
 
 """
 ===== Interlude: Checking your output so far =====
@@ -182,7 +201,19 @@ def q3(dfs):
     # - that the set of university names in each year is the same
     # Return:
     # - True if they are the same, and False otherwise.
-    raise NotImplementedError
+
+    df_2019, df_2020, df_2021 = dfs
+
+    df_2019_uni = df_2019['university']
+    df_2020_uni = df_2020['university']
+    df_2021_uni = df_2021['university']
+
+    if set(df_2019_uni) == set(df_2020_uni) and set(df_2019_uni) == set(df_2021_uni):
+            return True
+    else:
+            return False
+    
+    # note set dosent care about order when comparing but list does so i want to cmpare a llist i have sort 
 
 """
 3b (commentary).
@@ -190,6 +221,11 @@ Did the checks pass or fail?
 Comment below and explain why.
 
 === ANSWER Q3b BELOW ===
+
+q2 Passes because the data frames have the same shape and where ordered all the same wit the new columsn list 
+
+q3 did not pass because university ranking can change of the year succh as a univerity not making the top 100 list one year
+so the set of the univeriy will not mathc one year to another. 
 
 === END OF Q3b ANSWER ===
 """
@@ -218,10 +254,25 @@ Hint:
 def q4(dfs):
     # Sample 5 rows from each dataframe
     # Print out the samples
-    raise NotImplementedError
+
+    df_2019, df_2020, df_2021 = dfs
+
+    df_2019_sample = df_2019.sample(5)
+    df_2020_sample = df_2020.sample(5)
+    df_2021_sample = df_2021.sample(5)
+
+    print("2019")
+    print(df_2019_sample)
+    print("2020")
+    print(df_2020_sample)
+    print("2021")
+    print(df_2021_sample)
+
+    list_2021 = df_2021_sample['university'].tolist()  
+
 
     # Answer as a list of 5 university names
-    return []
+    return list_2021
 
 """
 Once you have implemented this part,
@@ -233,13 +284,13 @@ and 3 weaknesses of this dataset.
 
 === ANSWER Q4b BELOW ===
 Strengths:
-1.
-2.
+1.Has no null values 
+2. The states are standerized so it easy to compare data, Like its all USA and not United Staes or USA or US  in the some colums 
 
 Weaknesses:
-1.
-2.
-3.
+1. I think having floats and int can cuase problems if a pipline isnt set up to take floates or ints
+2.having special charecter like "(" can cuase some problems in programing in situation where charecter type matters
+3.only 199 data rows 
 === END OF Q4b ANSWER ===
 """
 
@@ -264,16 +315,31 @@ Example: if there are 5 null values in the first column, 3 in the second, 4 in t
 """
 
 def q5a(dfs):
-    # TODO
-    raise NotImplementedError
+    df_2019, df_2020, df_2021 = dfs
+    
     # Remember to return the list here
     # (Since .info() does not return any values,
     # for this part, you will need to copy and paste
     # the output as a hardcoded list.)
 
+    df_2021_info = df_2021.info()
+
+    return [100, 100, 100, 100, 100, 100, 100, 100]
+
+
+
 def q5b(dfs):
-    # TODO
-    raise NotImplementedError
+
+
+    df_2019, df_2020, df_2021 = dfs
+
+    dict_2021 = {}
+    for i in df_2021.columns:
+        df_2021[i].count()
+        dict_2021[i] = df_2021[i].count()
+    return list(dict_2021.values())
+
+
     # Remember to return the list here
 
 """
@@ -284,9 +350,9 @@ We will use this in the unit tests below.
 """
 
 def q5c():
-    raise NotImplementedError
     # TODO: fill this in with the expected number
-    num_non_null = 0
+
+    num_non_null = 100
     return num_non_null
 
 """
@@ -315,29 +381,29 @@ from each unit test (function beginning with `test_`).
 Then, run `pytest part1.py` in the terminal.
 """
 
-@pytest.mark.skip
+
 def test_q1():
     dfs = load_input()
     assert len(dfs) == 3
     assert all([isinstance(df, pd.DataFrame) for df in dfs])
 
-@pytest.mark.skip
+
 def test_q2():
     dfs = load_input()
     assert q2(dfs)
 
-@pytest.mark.skip
+@pytest.mark.xfail
 def test_q3():
     dfs = load_input()
     assert q3(dfs)
 
-@pytest.mark.skip
+
 def test_q4():
     dfs = load_input()
     samples = q4(dfs)
     assert len(samples) == 5
 
-@pytest.mark.skip
+
 def test_q5():
     dfs = load_input()
     answers = q5a(dfs) + q5b(dfs)
@@ -351,12 +417,16 @@ def test_q5():
 
 === ANSWER Q6a BELOW ===
 
+yest q3 fialed
+
 === END OF Q6a ANSWER ===
 
 6b. For each test that fails, is it because your code
 is wrong or because the test is wrong?
 
 === ANSWER Q6b BELOW ===
+
+the code was write it is suppoed to return false 
 
 === END OF Q6b ANSWER ===
 
@@ -374,8 +444,8 @@ Please include expected failures (@pytest.mark.xfail).
 """
 
 def q6c():
-    # TODO
-    raise NotImplementedError
+    # Enter the number of tests that failed here
+    print(0)
 
 """
 ===== End of interlude =====
@@ -392,9 +462,16 @@ As your answer to this part, return the number of columns in each dataframe afte
 """
 
 def q7(dfs):
-    # TODO
-    raise NotImplementedError
+    
     # Remember to return the list here
+
+    df_2019, df_2020, df_2021 = dfs
+
+    df_2019['year'] = 2019
+    df_2020['year'] = 2020
+    df_2021['year'] = 2021
+
+    return [df_2019.shape[1], df_2020.shape[1], df_2021.shape[1]]
 
 """
 8a.
@@ -405,15 +482,39 @@ As your answer, return the count for "USA" in 2021.
 
 def q8a(dfs):
     # Enter Code here
-    # TODO
-    raise NotImplementedError
+    # TODO  
+
+    df_2019, df_2020, df_2021 = dfs
+
+    merged_df = pd.concat([df_2019, df_2020, df_2021])
+
+    grouped = merged_df.groupby(['region', 'year']).count()['university'].reset_index(name='university_count') # need the index to be able to pivot
+
+    pivot_t = grouped.pivot(
+    index='region',  # Regions as row index
+    columns='year',  # Years as column headers
+    values='university_count'  # Use the counts as values
+    ).fillna(0)  # Fill missing values with 0
+
+    print(pivot_t)
+
+    return pivot_t.loc['USA', 2021] #rc car
+
+    
+
+
+
+
     # Remember to return the count here
 
 """
 8b.
 Do you notice some trend? Comment on what you observe and why might that be consistent throughout the years.
 
+
 === ANSWER Q8b BELOW ===
+
+Most countrys that have a high number of universities in the top 100 are the same each year tend to stay in it beside the exception of Scotland.
 
 === END OF Q8b ANSWER ===
 """
@@ -431,8 +532,12 @@ The list should contain 5 elements.
 
 def q9(dfs):
     # Enter code here
-    # TODO
-    raise NotImplementedError
+    df_2019, df_2020, df_2021 = dfs
+
+    a= df_2021[['academic reputation', 'employer reputation', 'faculty student', 'citations per faculty', 'overall score']].mean().reset_index(name='average')
+    print(a)
+
+    return a['average'].tolist()
     # Return the list here
 
 """
@@ -449,20 +554,30 @@ def q10_helper(dfs):
     # Enter code here
     # TODO
     # Placeholder for the avg_2021 dataframe
-    avg_2021 = pd.DataFrame()
+    df_2019, df_2020, df_2021 = dfs
+
+    df_2021 = df_2021.drop(['rank', 'year','university'], axis=1)
+
+    avg_2021 = df_2021.groupby(['region']).mean().reset_index()
+   
     return avg_2021
 
 def q10(avg_2021):
+
+    print(avg_2021.head(5))
+
+
     """
     Input: the avg_2021 dataframe
     Print: the first 5 rows of the dataframe
 
+
+
     As your answer, simply return the number of rows printed.
     (That is, return the integer 5)
     """
+    return avg_2021.head(5).shape[0]
     # Enter code here
-    raise NotImplementedError
-    # Return 5
 
 """
 ===== Questions 11-14: Exploring the avg_2021 dataframe =====
@@ -474,7 +589,12 @@ As your answer to this part, return the first row of the sorted dataframe.
 """
 
 def q11(avg_2021):
-    raise NotImplementedError
+
+    avg_2021.sort_values(by='overall score', ascending=False, inplace=True) # refrecngin vs making a new one here im refrecning , inplace for refrecing 
+
+    return avg_2021.iloc[0,:]
+
+
 
 """
 12a.
@@ -497,10 +617,24 @@ Your answer to which university went down will not be graded.
 
 For the answer to this part return the name of the country that tops the ranking and the name of one country that went down in the rankings.
 """
+def q12_helper(dfs):
+    # Enter code here
+    # Placeholder for the avg_2021 dataframe
+    df_2019, df_2020, df_2021 = dfs
 
-def q12a(avg_2021):
-    raise NotImplementedError
-    return ("TODO", "TODO")
+    df_2019 = df_2019.drop(['rank', 'year','university'], axis=1)
+
+    avg_2019 = df_2019.groupby(['region']).mean().reset_index()
+   
+    return avg_2019
+
+
+
+def q12a(avg_2021,dfs):
+
+    avg_2019 = q12_helper(dfs)
+
+    q11(avg_2019)
 
 """
 12b.
@@ -812,7 +946,8 @@ def PART_1_PIPELINE():
 
     # Questions 11-15
     log_answer("q11", q11, avg_2021)
-    log_answer("q12", q12a, avg_2021)
+
+    log_answer("q12", q12a, avg_2021,dfs)
     # 12b: commentary
     log_answer("q13", q13a, avg_2021)
     # 13b: commentary
