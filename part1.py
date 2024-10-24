@@ -738,14 +738,24 @@ As your answer, return the shape of the new dataframe.
 def q15_helper(dfs):
     # Return the new dataframe
     # TODO
-    # Placeholder:
-    top_10 = pd.DataFrame()
+
+    df_2019, df_2020, df_2021 = dfs
+
+    df_2019 = df_2019[['university', 'overall score', 'year']].sort_values(by='overall score', ascending=False).head(10).rename(columns={'overall score': 'overall score_2019'})
+    df_2020 = df_2020[['university', 'overall score', 'year']].sort_values(by='overall score', ascending=False).head(10).rename(columns={'overall score': 'overall score_2020'})
+    df_2021 = df_2021[['university', 'overall score', 'year']].sort_values(by='overall score', ascending=False).head(10).rename(columns={'overall score': 'overall score_2021'})
+
+    top_10 = pd.merge(df_2019, df_2020, on='university') # dosent matter since they all the same 
+    top_10 = pd.merge(top_10, df_2021, on='university')
+
+    top_10 = top_10[['university', 'overall score_2019', 'overall score_2020', 'overall score_2021']]
+
+
     return top_10
 
 def q15(top_10):
-    # Enter code here
-    # TODO
-    raise NotImplementedError
+
+    print(top_10.shape)
 
 """
 16.
@@ -759,13 +769,12 @@ As your answer, return the new column names.
 """
 
 def q16(top_10):
-    # Enter code here
-    # TODO
-    raise NotImplementedError
+    return top_10.columns.tolist()
 
 """
 17a.
-Draw a suitable plot to show how the overall scores of the Top 10 universities varied over the three years. Clearly label your graph and attach a legend. Explain why you chose the particular plot.
+Draw a suitable plot to show how the overall scores of the Top 10 universities varied over the three years. 
+Clearly label your graph and attach a legend. Explain why you chose the particular plot.
 
 Save your plot in output/16.png.
 
@@ -778,15 +787,41 @@ Note:
 
 def q17a(top_10):
     # Enter code here
-    # TODO
-    raise NotImplementedError
-    # return "output/17a.png"
+
+    plt.figure(figsize=(20,16))
+
+    plt.plot(top_10['university'], top_10['overall score_2019'], label='2019', marker='d')
+    plt.plot(top_10['university'], top_10['overall score_2020'], label='2020', marker='^')
+    plt.plot(top_10['university'], top_10['overall score_2021'], label='2021', marker='x')
+
+    plt.xticks(rotation=35, ha='right', fontsize=7)
+
+    plt.xlabel('University')
+    plt.ylabel('Overall Score')
+    plt.title('Top 10 Universities Overall Scores Over 3 Years')
+    plt.legend()
+    plt.savefig('output/17a.png')
+    plt.close()
+    return "output/17a.png"
+
+
+"""I chose this graph beccause it was the easist to make. I amde the dots different so it was easy to
+ see the diffrence between the years since 2020 and 2019 as basicly the same line so it was hard to see hence the diffetn dots """
 
 """
+
+
+
 17b.
 What do you observe from the plot above? Which university has remained consistent in their scores? Which have increased/decreased over the years?
 
 === ANSWER Q17a BELOW ===
+
+MIT has remaind consistent in their scores. Harvard has increased over the years.
+
+UCL,imperial college london, ETH Zurich and oxford have all increaded over the years.
+
+While the reast minus MIT have decreased.
 
 === END OF Q17b ANSWER ===
 """

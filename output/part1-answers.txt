@@ -1,7 +1,7 @@
 q1,3
 q2,True
 q3a,False
-q4,['Peking University', 'Ruprecht-Karls-Universität Heidelberg', 'Kyoto University', 'The University of New South Wales (UNSW Sydney)', 'University of Pennsylvania']
+q4,['University of St Andrews', 'Pohang University of Science And Technology (POSTECH)', 'Harvard University', 'Massachusetts Institute of Technology (MIT)', 'The Chinese University of Hong Kong (CUHK)']
 q5a,[100, 100, 100, 100, 100, 100, 100, 100]
 q5b,[100, 100, 100, 100, 100, 100, 100, 100]
 q5c,100
@@ -20,11 +20,11 @@ Name: 13, dtype: object
 q12,('USA', 'Signapore')
 q13,output/13a.png
 q14a,output/14a.png
-q15,Not Implemented
-q16,Not Implemented
-q17,Not Implemented
+q15,None
+q16,['university', 'overall score_2019', 'overall score_2020', 'overall score_2021']
+q17,output/17a.png
 q18,Not Implemented
 q20a,Not Implemented
 q20b,Not Implemented
 q21,Not Implemented
-PART 1,7
+PART 1,4
