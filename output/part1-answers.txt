@@ -1,7 +1,7 @@
 q1,3
 q2,True
 q3a,False
-q4,['University of St Andrews', 'Pohang University of Science And Technology (POSTECH)', 'Harvard University', 'Massachusetts Institute of Technology (MIT)', 'The Chinese University of Hong Kong (CUHK)']
+q4,['University of Illinois at Urbana-Champaign', 'University of California, Los Angeles (UCLA)', 'Ludwig-Maximilians-Universität München', "King's College London", 'Lomonosov Moscow State University']
 q5a,[100, 100, 100, 100, 100, 100, 100, 100]
 q5b,[100, 100, 100, 100, 100, 100, 100, 100]
 q5c,100
@@ -23,8 +23,8 @@ q14a,output/14a.png
 q15,None
 q16,['university', 'overall score_2019', 'overall score_2020', 'overall score_2021']
 q17,output/17a.png
-q18,Not Implemented
+q18,output/18.png
 q20a,Not Implemented
 q20b,Not Implemented
 q21,Not Implemented
-PART 1,4
+PART 1,3

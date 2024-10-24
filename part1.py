@@ -61,6 +61,7 @@ To begin, let's load the Pandas library.
 """
 
 import pandas as pd
+import seaborn as sn
 
 """
 1. Load the dataset into Pandas
@@ -850,14 +851,26 @@ As the answer to this part, return the name of the plot you saved.
 def q18(dfs):
     # Enter code here
     # TODO
-    raise NotImplementedError
-    # return "output/18.png"
+
+    df_2019, df_2020, df_2021 = dfs
+
+    df_2021_cor = df_2021.drop(['rank', 'year','university','region'], axis=1)
+
+    corr_matrix = df_2021_cor.corr()
+
+    sn.heatmap(corr_matrix, annot=True)
+    plt.tight_layout()
+    plt.savefig('output/18.png')
+    plt.close()
+    return "output/18.png"
 
 """
 19. Comment on at least one entry in the matrix you obtained in the previous
 part that you found surprising or interesting.
 
 === ANSWER Q19 BELOW ===
+
+I found it interesting that academic reputation and employer reputation had a high correlation of 0.69
 
 === END OF Q19 ANSWER ===
 """
