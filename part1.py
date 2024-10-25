@@ -446,7 +446,7 @@ Please include expected failures (@pytest.mark.xfail).
 
 def q6c():
     # Enter the number of tests that failed here
-    print(0)
+    return 0
 
 """
 ===== End of interlude =====
@@ -635,9 +635,14 @@ def q12a(avg_2021,dfs):
 
     avg_2019 = q12_helper(dfs)
 
+    print("lkhsflkhklfhkslhflkdshfldkhsdlkfhdl")
+
+    print(avg_2019.sort_values(by='overall score', ascending=False))
+
+
     q11(avg_2019)
 
-    return "USA","Signapore"
+    return "Signapore","USA"
 
 """
 12b.
@@ -756,7 +761,7 @@ def q15_helper(dfs):
 
 def q15(top_10):
 
-    print(top_10.shape)
+    return top_10.shape
 
 """
 16.
@@ -908,13 +913,25 @@ Use your new column to sort the data by the new values and return the top 10 uni
 
 def q20a(dfs):
     # TODO
-    raise NotImplementedError
-    # For your answer, return the score for Berkeley in the new column.
+
+    df_2019, df_2020, df_2021 = dfs
+
+    df_2021['new_rank'] = df_2021['overall score'] - 10
+
+    df_2021.loc[df_2021['university'] == 'University of California, Berkeley (UCB)', 'new_rank'] = 100
+
+    return  df_2021.loc[df_2021['university'] == 'University of California, Berkeley (UCB)', 'new_rank'].values[0]
 
 def q20b(dfs):
     # TODO
-    raise NotImplementedError
-    # For your answer, return the top 10 universities.
+
+    df_2019, df_2020, df_2021 = dfs
+    df_2021.sort_values(by='new_rank', ascending=False, inplace=True)
+
+    df_2021.reset_index(drop=True, inplace=True)
+
+
+    return df_2021.head(10)
 
 """
 21. Exploring data manipulation and falsification, continued
@@ -933,8 +950,16 @@ Return the top 10 universities from the falsified data.
 """
 
 def q21():
-    # TODO
-    raise NotImplementedError
+
+    df_2021_csv = pd.read_csv('data/2021.csv', encoding='latin-1')
+
+    df_2021_csv.iloc[27,1] = 'Massachusetts Institute of Technology (MIT)'
+
+    df_2021_csv.iloc[0,1] = 'University of California, Berkeley (UCB)'
+
+    df_2021_csv.to_csv('data/2021_falsified.csv', index=False)
+
+    return df_2021_csv.head(10)
 
 """
 22. Exploring data manipulation and falsification, continued
@@ -945,6 +970,10 @@ if you were a "bad actor" trying to manipulate the rankings?
 Which do you think would be the most difficult to detect?
 
 === ANSWER Q22 BELOW ===
+
+Well depends the scenario i feel ike method one of changing the ranking method would be good becuase you there is some logis behind it and you can claim its based on the ranking system.If 
+you can alter the ranking system then being able to change the data it self it the better method.
+
 
 === END OF Q22 ANSWER ===
 """

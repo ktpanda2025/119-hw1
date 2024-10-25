@@ -1,11 +1,11 @@
 q1,3
 q2,True
 q3a,False
-q4,['University of Illinois at Urbana-Champaign', 'University of California, Los Angeles (UCLA)', 'Ludwig-Maximilians-Universität München', "King's College London", 'Lomonosov Moscow State University']
+q4,['University of Zurich', 'University of Oxford', 'Pennsylvania State University', 'The London School of Economics and Political Science (LSE)', 'Zhejiang University']
 q5a,[100, 100, 100, 100, 100, 100, 100, 100]
 q5b,[100, 100, 100, 100, 100, 100, 100, 100]
 q5c,100
-q6c,None
+q6c,0
 q7,[9, 9, 9]
 q8a,29.0
 q9,[67.041, 67.68, 73.539, 82.147, 75.504]
@@ -17,14 +17,38 @@ faculty student              100.0
 citations per faculty        95.95
 overall score                 91.8
 Name: 13, dtype: object
-q12,('USA', 'Signapore')
+q12,('Signapore', 'USA')
 q13,output/13a.png
 q14a,output/14a.png
-q15,None
+q15,(10, 4)
 q16,['university', 'overall score_2019', 'overall score_2020', 'overall score_2021']
 q17,output/17a.png
 q18,output/18.png
-q20a,Not Implemented
-q20b,Not Implemented
-q21,Not Implemented
-PART 1,3
+q20a,100.0
+q20b,   rank                                         university       region  academic reputation  ...  citations per faculty  overall score  year  new_rank
+0    28           University of California, Berkeley (UCB)          USA                 97.7  ...                  100.0           82.6  2021     100.0
+1     1        Massachusetts Institute of Technology (MIT)          USA                 99.8  ...                  100.0          100.0  2021      90.0
+2     2                                Stanford University          USA                 98.6  ...                  100.0           98.4  2021      88.4
+3     3                                 Harvard University          USA                 99.6  ...                  100.0           97.4  2021      87.4
+4     4                               University of Oxford           UK                 84.7  ...                  100.0           97.2  2021      87.2
+5     5       California Institute of Technology (Caltech)          USA                100.0  ...                   97.8           96.9  2021      86.9
+6     6  ETH Zurich - Swiss Federal Institute of Techno...  Switzerland                 98.4  ...                   98.4           95.9  2021      85.9
+7     7                            University of Cambridge           UK                 74.2  ...                  100.0           95.0  2021      85.0
+8     8                                                UCL           UK                 76.7  ...                   99.3           94.8  2021      84.8
+9     9                            Imperial College London           UK                 72.1  ...                   98.6           94.1  2021      84.1
+
+[10 rows x 10 columns]
+q21,   Rank                                         University  Overall Score  ...  INTERNATIONAL STUDENTS  CITATIONS PER FACULTY       Region
+0     1           University of California, Berkeley (UCB)          100.0  ...                   100.0                  100.0          USA
+1     2                                Stanford University           98.4  ...                   100.0                  100.0          USA
+2     3                                 Harvard University           97.4  ...                   100.0                  100.0          USA
+3     4                               University of Oxford           97.2  ...                   100.0                  100.0           UK
+4     5       California Institute of Technology (Caltech)           96.9  ...                    81.2                   97.8          USA
+5     6  ETH Zurich - Swiss Federal Institute of Techno...           95.9  ...                    96.7                   98.4  Switzerland
+6     7                            University of Cambridge           95.0  ...                   100.0                  100.0           UK
+7     8                                                UCL           94.8  ...                    98.7                   99.3           UK
+8     9                            Imperial College London           94.1  ...                    99.9                   98.6           UK
+9    10                              University of Chicago           92.0  ...                    93.7                   99.5          USA
+
+[10 rows x 10 columns]
+PART 1,0
