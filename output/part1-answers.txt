@@ -1,7 +1,7 @@
 q1,3
 q2,True
 q3a,False
-q4,['University of Zurich', 'University of Oxford', 'Pennsylvania State University', 'The London School of Economics and Political Science (LSE)', 'Zhejiang University']
+q4,['University of Oxford', 'California Institute of Technology (Caltech)', 'Seoul National University', 'Universiti Malaya (UM)', 'University of California, Berkeley (UCB)']
 q5a,[100, 100, 100, 100, 100, 100, 100, 100]
 q5b,[100, 100, 100, 100, 100, 100, 100, 100]
 q5c,100
@@ -51,4 +51,3 @@ q21,   Rank                                         University  Overall Score  .
 9    10                              University of Chicago           92.0  ...                    93.7                   99.5          USA
 
 [10 rows x 10 columns]
-PART 1,0

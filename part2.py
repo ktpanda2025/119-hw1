@@ -14,6 +14,7 @@ to report which one is faster.
 import part1
 import matplotlib.pyplot as plt
 import timeit
+import pandas as pd
 """
 === Questions 1-5: Throughput and Latency Helpers ===
 
@@ -267,7 +268,8 @@ Is this more or less than what you expected?
 === ANSWER Q1b BELOW ===
 
 
-I thouhg it would run more constintly but it first run of the function took a lot longer comparer to the next thrre 
+I thouhg it would run more constintly but it first run of the function took a lot longer comparered to next ones
+
 === END OF Q1b ANSWER ===
 """
 
@@ -285,15 +287,28 @@ of the pipeline in part 1.
 
 # You will need these:
 # part1.load_input
-# part1.PART1_PIPELINE
+# part1.PART_1_PIPELINE
 
 def q5a():
     # Return the throughput of the pipeline in part 1.
-    raise NotImplementedError
+
+    part1.load_input()
+    part1.PART_1_PIPELINE()
+
+    h = ThroughputHelper()
+    h.add_pipeline("part1", 1, part1.PART_1_PIPELINE)
+    h.compare_throughput()
+    return h.throughputs
 
 def q5b():
     # Return the latency of the pipeline in part 1.
-    raise NotImplementedError
+    part1.load_input()
+    part1.PART_1_PIPELINE()
+    h = LatencyHelper()
+    h.add_pipeline("part1", part1.PART_1_PIPELINE)
+    h.compare_latency()
+    return h.latencies
+
 
 """
 ===== Questions 6-10: Performance Comparison 1 =====
@@ -344,20 +359,40 @@ See if you can compute this using Pandas functions only.
 """
 
 def load_input(filename):
+    data_pd = pd.read_csv(filename)
+    data_pd_clearn = data_pd[data_pd[(data_pd["Code"] != "OWID_WRL") & (data_pd["Code"].notna())]]
+
+    count_per_code = data_pd_clearn.groupby(['Entity']).size().reset_index(name='Count')# remove countries with only one year
+    final_daa = count_per_code[count_per_code['Count'] > 1]
+    final_daa = final_daa.drop(columns=['Count'])
+    return final_daa
+
     # Return a dataframe containing the population data
     # **Clean the data here**
-    raise NotImplementedError
 
 def population_pipeline(df):
+
+
+    groupd_df = df.groupby('Entity').agg(
+        Year_Min = ('Year', 'min'),
+        Year_Max = ('Year', 'max'),
+        Population_sum = ('Population', 'min'),
+    )
+
+    groupd_df['changge_rate'] =  (groupd_df['Year_Max']   - groupd_df['Year_Min']) / groupd_df['Population_sum']
+
+
+    return groupd_df.describe()['changge_rate']
     # Input: the dataframe from load_input()
     # Return a list of min, median, max, mean, and standard deviation
-    raise NotImplementedError
 
 def q6():
+    a = load_input("data/population.csv")
+    stats = population_pipeline(load_input(a))
     # As your answer to this part,
     # call load_input() and then population_pipeline()
     # Return a list of min, median, max, mean, and standard deviation
-    raise NotImplementedError
+    return stats.tolist()
 
 """
 7. Varying the input size
