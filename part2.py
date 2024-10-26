@@ -38,7 +38,7 @@ Fill in the add_pipeline, eval_throughput, and generate_plot functions below.
 # Number of times to run each pipeline in the following results.
 # You may modify this if any of your tests are running particularly slow
 # or fast (though it should be at least 10).
-NUM_RUNS = 10
+NUM_RUNS = 2
 class ThroughputHelper:
     def __init__(self):
         # Initialize the object.
@@ -92,7 +92,10 @@ class ThroughputHelper:
         # the most sense.
         # Make sure you include a legend.
         # Save the result in the filename provided.
+        plt.figure(figsize=(17, 10))
         plt.bar(self.names, self.throughputs)
+        plt.tight_layout()
+        plt.xticks(fontsize = 9)
         plt.savefig(filename)
         plt.close()
 """
@@ -360,11 +363,15 @@ See if you can compute this using Pandas functions only.
 
 def load_input(filename):
     data_pd = pd.read_csv(filename)
-    data_pd_clearn = data_pd[data_pd[(data_pd["Code"] != "OWID_WRL") & (data_pd["Code"].notna())]]
+    data_pd_clean =  data_pd[(data_pd["Code"] != "OWID_WRL") & (data_pd["Code"].notna())]
 
-    count_per_code = data_pd_clearn.groupby(['Entity']).size().reset_index(name='Count')# remove countries with only one year
-    final_daa = count_per_code[count_per_code['Count'] > 1]
-    final_daa = final_daa.drop(columns=['Count'])
+    #ount_per_code = data_pd_clearn.groupby(['Entity']).size().reset_index(name='Count')# remove countries with only one year
+
+    data_pd_clean['partition_count'] = data_pd_clean.groupby(['Entity'])['Entity'].transform('count')
+
+
+    final_daa = data_pd_clean[data_pd_clean['partition_count'] > 1]
+    final_daa = final_daa.drop(columns=['partition_count'])
     return final_daa
 
     # Return a dataframe containing the population data
@@ -372,27 +379,28 @@ def load_input(filename):
 
 def population_pipeline(df):
 
-
+    print(df.columns)
     groupd_df = df.groupby('Entity').agg(
         Year_Min = ('Year', 'min'),
         Year_Max = ('Year', 'max'),
-        Population_sum = ('Population', 'min'),
+        Population_sum = ('Population (historical)', 'min'),
     )
 
     groupd_df['changge_rate'] =  (groupd_df['Year_Max']   - groupd_df['Year_Min']) / groupd_df['Population_sum']
 
+    rate = groupd_df['changge_rate']
 
-    return groupd_df.describe()['changge_rate']
+    return [rate.min(),rate.median(),rate.max(),rate.mean(),rate.std()] 
     # Input: the dataframe from load_input()
     # Return a list of min, median, max, mean, and standard deviation
 
 def q6():
     a = load_input("data/population.csv")
-    stats = population_pipeline(load_input(a))
+    stats = population_pipeline(a)
     # As your answer to this part,
     # call load_input() and then population_pipeline()
     # Return a list of min, median, max, mean, and standard deviation
-    return stats.tolist()
+    return stats
 
 """
 7. Varying the input size
@@ -415,19 +423,24 @@ and save a new file.
 Make four versions of load input that load your datasets.
 (The _large one should use the full population dataset.)
 """
+    
+pop_csv_read_in = pd.read_csv('data/population.csv')
 
 def load_input_small():
-    raise NotImplementedError
+    pop_csv_read_in.head(600).to_csv('data/population-small.csv',index = False )
+    return pd.read_csv('data/population-small.csv')
 
 def load_input_medium():
-    raise NotImplementedError
+     pop_csv_read_in.head(6000).to_csv('data/population-medium.csv',index = False )
+     return pd.read_csv('data/population-medium.csv')
 
 def load_input_large():
-    raise NotImplementedError
+    return pop_csv_read_in
 
 def load_input_single_row():
+     pop_csv_read_in.head(1).to_csv('data/population-single-row.csv',index = False )
+     return pd.read_csv('data/population-single-row.csv')
     # This is the pipeline we will use for latency.
-    raise NotImplementedError
 
 def q7():
     # Don't modify this part
@@ -453,16 +466,19 @@ Each should call your population_pipeline from Q7.
 """
 
 def baseline_small():
-    raise NotImplementedError
+    stats = population_pipeline(load_input_small())
+    
 
 def baseline_medium():
-    raise NotImplementedError
+    stats = population_pipeline(load_input_medium())
+    
 
 def baseline_large():
-    raise NotImplementedError
-
+    stats = population_pipeline(load_input_large())
+   
 def baseline_latency():
-    raise NotImplementedError
+    stats = population_pipeline(load_input_single_row())
+   
 
 def q8():
     # Don't modify this part
@@ -491,35 +507,54 @@ b. Generate a plot in output/q9b.png of the latencies
     baseline_latency, fromvar_latency
 """
 
-# TODO
-# POPULATION_SMALL =
-# POPULATION_MEDIUM =
-# POPULATION_LARGE =
-# POPULATION_SINGLE_ROW =
+
+POPULATION_SMALL = load_input_small()
+POPULATION_MEDIUM = load_input_medium()
+POPULATION_LARGE = load_input_large()
+POPULATION_SINGLE_ROW = load_input_single_row()
 
 def fromvar_small():
-    raise NotImplementedError
+    stat = population_pipeline(POPULATION_SMALL)
 
 def fromvar_medium():
-    raise NotImplementedError
+    stat = population_pipeline(POPULATION_MEDIUM)
 
 def fromvar_large():
-    raise NotImplementedError
-
+    stat = population_pipeline(POPULATION_LARGE)
+ 
 def fromvar_latency():
-    raise NotImplementedError
+    stat = population_pipeline(POPULATION_SINGLE_ROW)
+   
 
 def q9a():
+
+    h = ThroughputHelper()
+    h.add_pipeline("baseline_small", len(POPULATION_SMALL), baseline_small)
+    h.add_pipeline("baseline_medium", len(POPULATION_MEDIUM), baseline_medium)
+    h.add_pipeline("baseline_large", len(POPULATION_LARGE), baseline_large)
+
+    h.add_pipeline("fromvar_small", len(POPULATION_SMALL), fromvar_small)
+    h.add_pipeline("fromvar_medium", len(POPULATION_MEDIUM), fromvar_medium)
+    h.add_pipeline("fromvar_large", len(POPULATION_LARGE), fromvar_large)
+
+    h.compare_throughput()
+    h.generate_plot("output/q9a.png")
+    return h.throughputs
+
     # Add all 6 pipelines for a throughput comparison
     # Generate plot in ouptut/q9a.png
     # Return list of 6 throughputs
-    raise NotImplementedError
-
 def q9b():
+    h = LatencyHelper()
+    h.add_pipeline("baseline_latency", baseline_latency)
+    h.add_pipeline("fromvar_latency", fromvar_latency)
+    h.compare_latency()
+    h.generate_plot("output/q9b.png")
+    return h.latencies
     # Add 2 pipelines for a latency comparison
     # Generate plot in ouptut/q9b.png
     # Return list of 2 latencies
-    raise NotImplementedError
+   
 
 """
 10.
@@ -559,15 +594,87 @@ Create a new pipeline:
 """
 
 def for_loop_pipeline(df):
+
+    # data_pd_clean =  data_pd[(data_pd["Code"] != "OWID_WRL") & (data_pd["Code"].notna())]
+
+    country = df['Entity'].tolist()
+
+    code = df['Code'].tolist()
+
+    year = df['Year'].tolist()
+
+    population = df['Population (historical)'].tolist()
+
+    rate = []
+
+    
+    for i in range(len(country)): # filter out data
+        value =code[i]
+
+        if value != 'OWID_WRL' and  value != None:
+            code.append(value)
+            country.append(country[i])
+            year.append(year[i])
+            population.append(population[i])
+
+
+    for i in set(country):
+
+
+        country_min = float('inf') 
+        country_max = float('-inf') 
+        country_population = 0
+
+
+        for j in range(len(country)):
+            if country[j] == i:
+
+                if year[j] < country_min:
+                    country_min = year[j]
+
+                if year[j] > country_max:
+                    country_max = year[j]
+
+                country_population += population[j]
+        rate.append((country_max - country_min) / country_population)
+
+
+    # summary parts 
+
+    min = 0 
+    for i in rate:
+        if i < min:
+            min = i
+    max =0
+    for i in rate:
+        if i > max:
+            max = i
+    mean = sum(rate) / len(rate)
+
+    median = rate[int(len(rate) / 2)]
+
+    std = 0
+    for i in rate:
+        std += (i - mean) ** 2
+    std = (std / len(rate)) ** 0.5
+
+    return [min, median, max, mean, std]
+ 
+    
+    
+    
     # Input: the dataframe from load_input()
     # Return a list of min, median, max, mean, and standard deviation
-    raise NotImplementedError
+
 
 def q11():
+
     # As your answer to this part, call load_input() and then
     # for_loop_pipeline() to return the 5 numbers.
     # (these should match the numbers you got in Q6.)
-    raise NotImplementedError
+    a = load_input("data/population.csv")
+    stats = for_loop_pipeline(a)
+    return stats
 
 """
 12.

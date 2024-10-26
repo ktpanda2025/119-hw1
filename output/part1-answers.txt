@@ -1,7 +1,7 @@
 q1,3
 q2,True
 q3a,False
-q4,['University of Oxford', 'California Institute of Technology (Caltech)', 'Seoul National University', 'Universiti Malaya (UM)', 'University of California, Berkeley (UCB)']
+q4,['Boston University', 'University of California, Berkeley (UCB)', 'The University of Hong Kong', 'Fudan University', 'Kyoto University']
 q5a,[100, 100, 100, 100, 100, 100, 100, 100]
 q5b,[100, 100, 100, 100, 100, 100, 100, 100]
 q5c,100
@@ -25,29 +25,27 @@ q16,['university', 'overall score_2019', 'overall score_2020', 'overall score_20
 q17,output/17a.png
 q18,output/18.png
 q20a,100.0
-q20b,   rank                                         university       region  academic reputation  ...  citations per faculty  overall score  year  new_rank
-0    28           University of California, Berkeley (UCB)          USA                 97.7  ...                  100.0           82.6  2021     100.0
-1     1        Massachusetts Institute of Technology (MIT)          USA                 99.8  ...                  100.0          100.0  2021      90.0
-2     2                                Stanford University          USA                 98.6  ...                  100.0           98.4  2021      88.4
-3     3                                 Harvard University          USA                 99.6  ...                  100.0           97.4  2021      87.4
-4     4                               University of Oxford           UK                 84.7  ...                  100.0           97.2  2021      87.2
-5     5       California Institute of Technology (Caltech)          USA                100.0  ...                   97.8           96.9  2021      86.9
-6     6  ETH Zurich - Swiss Federal Institute of Techno...  Switzerland                 98.4  ...                   98.4           95.9  2021      85.9
-7     7                            University of Cambridge           UK                 74.2  ...                  100.0           95.0  2021      85.0
-8     8                                                UCL           UK                 76.7  ...                   99.3           94.8  2021      84.8
-9     9                            Imperial College London           UK                 72.1  ...                   98.6           94.1  2021      84.1
-
-[10 rows x 10 columns]
-q21,   Rank                                         University  Overall Score  ...  INTERNATIONAL STUDENTS  CITATIONS PER FACULTY       Region
-0     1           University of California, Berkeley (UCB)          100.0  ...                   100.0                  100.0          USA
-1     2                                Stanford University           98.4  ...                   100.0                  100.0          USA
-2     3                                 Harvard University           97.4  ...                   100.0                  100.0          USA
-3     4                               University of Oxford           97.2  ...                   100.0                  100.0           UK
-4     5       California Institute of Technology (Caltech)           96.9  ...                    81.2                   97.8          USA
-5     6  ETH Zurich - Swiss Federal Institute of Techno...           95.9  ...                    96.7                   98.4  Switzerland
-6     7                            University of Cambridge           95.0  ...                   100.0                  100.0           UK
-7     8                                                UCL           94.8  ...                    98.7                   99.3           UK
-8     9                            Imperial College London           94.1  ...                    99.9                   98.6           UK
-9    10                              University of Chicago           92.0  ...                    93.7                   99.5          USA
+q20b,   rank                                         university       region  academic reputation  employer reputation  faculty student  citations per faculty  overall score  year  new_rank
+0    28           University of California, Berkeley (UCB)          USA                 97.7                 39.7             92.4                  100.0           82.6  2021     100.0
+1     1        Massachusetts Institute of Technology (MIT)          USA                 99.8                 94.1            100.0                  100.0          100.0  2021      90.0
+2     2                                Stanford University          USA                 98.6                 67.7             99.8                  100.0           98.4  2021      88.4
+3     3                                 Harvard University          USA                 99.6                 62.2             86.3                  100.0           97.4  2021      87.4
+4     4                               University of Oxford           UK                 84.7                 98.5             99.7                  100.0           97.2  2021      87.2
+5     5       California Institute of Technology (Caltech)          USA                100.0                 87.3             99.4                   97.8           96.9  2021      86.9
+6     6  ETH Zurich - Swiss Federal Institute of Techno...  Switzerland                 98.4                 98.0            100.0                   98.4           95.9  2021      85.9
+7     7                            University of Cambridge           UK                 74.2                 97.6            100.0                  100.0           95.0  2021      85.0
+8     8                                                UCL           UK                 76.7                100.0             99.1                   99.3           94.8  2021      84.8
+9     9                            Imperial College London           UK                 72.1                100.0            100.0                   98.6           94.1  2021      84.1
+q21,   Rank                                         University  Overall Score  ACADEMIC REPUTATION  ...  INTERNATIONAL FACULTY  INTERNATIONAL STUDENTS  CITATIONS PER FACULTY       Region
+0     1           University of California, Berkeley (UCB)          100.0                 99.8  ...                  100.0                   100.0                  100.0          USA
+1     2                                Stanford University           98.4                 98.6  ...                  100.0                   100.0                  100.0          USA
+2     3                                 Harvard University           97.4                 99.6  ...                   98.7                   100.0                  100.0          USA
+3     4                               University of Oxford           97.2                 84.7  ...                  100.0                   100.0                  100.0           UK
+4     5       California Institute of Technology (Caltech)           96.9                100.0  ...                  100.0                    81.2                   97.8          USA
+5     6  ETH Zurich - Swiss Federal Institute of Techno...           95.9                 98.4  ...                   85.0                    96.7                   98.4  Switzerland
+6     7                            University of Cambridge           95.0                 74.2  ...                  100.0                   100.0                  100.0           UK
+7     8                                                UCL           94.8                 76.7  ...                   98.1                    98.7                   99.3           UK
+8     9                            Imperial College London           94.1                 72.1  ...                   99.8                    99.9                   98.6           UK
+9    10                              University of Chicago           92.0                 78.5  ...                   96.5                    93.7                   99.5          USA
 
 [10 rows x 10 columns]
