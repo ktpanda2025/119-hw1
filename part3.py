@@ -39,6 +39,9 @@ convert it to an integer and return it. You should get "12345".
 
 # You may need to conda install requests or pip3 install requests
 import requests
+import os 
+import subprocess
+import part2
 
 def download_file(url, filename):
     r = requests.get(url)
@@ -46,25 +49,44 @@ def download_file(url, filename):
         f.write(r.content)
 
 def clone_repo(repo_url):
-    # TODO
-    raise NotImplementedError
+
+    os.system(f"git clone {repo_url}")
 
 def run_script(script_path, data_path):
-    # TODO
-    raise NotImplementedError
+
+    os.system(f"python {script_path} {data_path}")
 
 def setup(repo_url, data_url, script_path):
-    # TODO
-    raise NotImplementedError
+    # Download the data file
+    clone_repo(repo_url)
+
+    download_file(data_url, "data.txt")
+
+    run_script(script_path, "data.txt")
+
 
 def q1():
     # Call setup as described in the prompt
+
+    setup(
+        "https://github.com/DavisPL-Teaching/119-hw1",
+        "https://raw.githubusercontent.com/DavisPL-Teaching/119-hw1/refs/heads/main/data/test-input.txt",
+        "test-script.py"
+    )
+
     # TODO
     # Read the file test-output.txt to a string
+    # Convert the string to an integer
+
+    with open("output/test-output.txt", "r") as f:
+        output = f.read()
+
+    inter =  int(output)
+
     # TODO
     # Return the integer value of the output
+    return inter
     # TODO
-    raise NotImplementedError
 
 """
 2.
@@ -77,11 +99,16 @@ this scenario?
 
 === ANSWER Q2a BELOW ===
 
+it make it faster to download the data and run the script. Also it does the same thing every time 
+so if some one else has to do it it would be the same every time.
+
 === END OF Q2a ANSWER ===
 
 Do you see an alternative to using a script like setup()?
 
 === ANSWER Q2b BELOW ===
+
+make a website that does it for you but it probaly has to do somthing similar to the setup() function.
 
 === END OF Q2b ANSWER ===
 
@@ -122,17 +149,29 @@ Hint: search for "import" in parts 1-3. Did you miss installing
 any packages?
 """
 
+
+
 def setup_for_new_machine():
-    # TODO
-    raise NotImplementedError
+
+    subprocess.run(['sudo', 'apt-get', 'update'], check=True)
+    subprocess.run(['sudo', 'apt-get', 'install', '-y', 'git'], check=True)
+
+    # Install conda packages
+    subprocess.run(['conda', 'install', '-c', 'conda-forge', 'pyspark'], check=True)
+
+    # Install pip packages
+    subprocess.run(['pip', 'install', 'pandas', 'pytest', 'pyspark'], check=True)
+
+    # Verify installations (you can add more if needed)
+    subprocess.run(['python', '--version'], check=True)
+    subprocess.run(['pip', '--version'], check=True)
+    subprocess.run(['conda', '--version'], check=True)
 
 def q3():
     # As your answer, return a string containing
     # the operating system name that you assumed the
     # new machine to have.
-    # TODO
-    raise NotImplementedError
-    # os =
+    os = 'MacOS'
     return os
 
 """
@@ -145,6 +184,8 @@ scripts like setup() and setup_for_new_machine()
 in their day-to-day jobs?
 
 === ANSWER Q4 BELOW ===
+
+Like 10 percent of there time. I think that software dev woulddo this instead.
 
 === END OF Q4 ANSWER ===
 
@@ -207,20 +248,34 @@ Hints:
 """
 
 def pipeline_shell():
-    # TODO
-    raise NotImplementedError
+
+    file_path = "data/population.csv"
+
+    a = os.popen(f'wc -l < {file_path}').read().strip()
+
+    return int(a)
     # Return resulting integer
 
 def pipeline_pandas():
-    # TODO
-    raise NotImplementedError
+
+    file_path = "data/population.csv"
+
+    a = pd.read_csv(file_path)
+    return int(a.shape[0])
+
     # Return resulting integer
 
 def q6():
     # As your answer to this part, check that both
     # integers are the same and return one of them.
-    # TODO
-    raise NotImplementedError
+    # 
+    oss = pipeline_shell()
+    pdd = pipeline_pandas()
+
+    if oss == pdd:
+        return oss
+    else:
+        return f"Not the same {oss} and {pdd}"
 
 """
 Let's do a performance comparison between the two methods.
@@ -236,8 +291,15 @@ def q7():
     # Return a tuple of two floats
     # throughput for shell, throughput for pandas
     # (in rows per second)
-    # TODO
-    raise NotImplementedError
+
+    a = part2.ThroughputHelper()
+
+    a.add_pipeline("OSS", 59177,pipeline_shell)
+    a.add_pipeline("Pandas",59177,pipeline_pandas)
+
+    a.compare_throughput()
+
+    return a.throughputs
 
 """
 8. Latency
@@ -248,7 +310,15 @@ def q8():
     # latency for shell, latency for pandas
     # (in milliseconds)
     # TODO
-    raise NotImplementedError
+
+    a = part2.LatencyHelper()
+    a.add_pipeline("OSS",pipeline_shell)
+    a.add_pipeline("Pandas",pipeline_pandas)
+
+    a.compare_latency()
+
+    return a.latencies
+
 
 """
 9. Which method is faster?
@@ -256,6 +326,11 @@ Comment on anything else you notice below.
 
 === ANSWER Q9 BELOW ===
 
+oss,pandas 
+[9_024_168 6_402_635.621811059]
+
+[7.225233300414402, 9.542654099641368]
+The Shell is faster than pandas by 2.3 milliseconds in latency and 2_621_532 rows per second in throughput.
 === END OF Q9 ANSWER ===
 """
 

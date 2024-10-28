@@ -72,7 +72,6 @@ class ThroughputHelper:
         # Make sure to use the NUM_RUNS variable.
         # Also, return the resulting list of throughputs,
         # in **number of items per second.**
-
         self.throughputs = []
 
         for i in range(len(self.pipelines)):  
@@ -375,18 +374,27 @@ def load_input(filename):
     # **Clean the data here**
 
 def population_pipeline(df):
+    df =  pd.read_csv('data/population.csv')
 
-    groupd_df = df.groupby('Entity').agg(
-        Year_Min = ('Year', 'min'),
-        Year_Max = ('Year', 'max'),
-        Population_sum = ('Population (historical)', 'sum'),
-    )
 
-    groupd_df['changge_rate'] =  (groupd_df['Year_Max']  - groupd_df['Year_Min']) / groupd_df['Population_sum']
+    grouped_df = df.groupby('Entity').agg(
+        Year_Min=('Year', 'min'),
+        Year_Max=('Year', 'max')
+    ).reset_index()
 
-    rate = groupd_df['changge_rate']
+    min_years = pd.merge(grouped_df, df, left_on=['Entity', 'Year_Min'], right_on=['Entity', 'Year'])
+    min_years = min_years[['Entity', 'Year_Min', 'Population (historical)']]
 
-    return [round(rate.min(),4), round(rate.median(),4), round(rate.max(),4), round(rate.mean(),4),round(rate.std(),4)] 
+    max_years = pd.merge(grouped_df, df, left_on=['Entity', 'Year_Max'], right_on=['Entity', 'Year'])
+    max_years = max_years[['Entity', 'Year_Max', 'Population (historical)']]
+
+
+    min_max_merge = min_years.merge(max_years,on = 'Entity')
+
+    min_max_merge['gradiant'] = (min_max_merge['Population (historical)_y'] - min_max_merge['Population (historical)_x']) / (min_max_merge['Year_Max'] - min_max_merge['Year_Min'])
+
+    rate = min_max_merge['gradiant'] 
+    return [rate.min(), rate.median(), rate.max(), rate.mean(), rate.std()]
     # Input: the dataframe from load_input()
     # Return a list of min, median, max, mean, and standard deviation
 
@@ -560,7 +568,7 @@ Which differs more, throughput or latency?
 What does this experiment show?
 
 ===== ANSWER Q10 BELOW =====
-
+In mine very dramatic. I think it becuase i used a good amount of pandas fucntin within mine 
 ===== END OF Q10 ANSWER =====
 """
 
@@ -602,34 +610,44 @@ def for_loop_pipeline(df):
     pop_fil = []
     rate = []
 
-    for i in range(len(country)):
+    for i in range(len(country)):# filter 
         if code[i] != 'OWID_WRL' and code[i] is not None:
             country_fil.append(country[i])  
             code_fil.append(code[i])        
             year_fil.append(year[i])        
             pop_fil.append(population[i])   
 
-   
+
     for i in set(country_fil):
         country_min = float('inf')
         country_max = float('-inf')
-        total_population = 0
+        min_pop = 0
+        max_pop = 0
 
 
         for j in range(len(country_fil)):
             if country_fil[j] == i:
                 if year_fil[j] < country_min:
                     country_min = year_fil[j]
+                    min_pop = pop_fil[j]
                 if year_fil[j] > country_max:
                     country_max = year_fil[j]
-                total_population += pop_fil[j]
+                    max_pop = pop_fil[j]
 
-        rate.append((country_max - country_min) / total_population)
+
+        if country_max != country_min or df.shape[0] == 1: #for the latency part 
+
+            if country_max == country_min:
+                grade = 0
+                rate.append(grade)
+            else:
+
+                grade = (max_pop - min_pop) / (country_max - country_min)
+                rate.append(grade)
 
     # summary parts 
 
     rate.sort()
-
     min = float('inf')
     for i in rate:
         if i < min:
@@ -638,7 +656,8 @@ def for_loop_pipeline(df):
     for i in rate:
         if i > max:
             max = i
-    mean = sum(rate) / len(rate)
+
+    mean = sum(rate) /len(rate)
 
     median = rate[int(len(rate) / 2)]
 
@@ -648,7 +667,7 @@ def for_loop_pipeline(df):
     std = (std / len(rate)) ** 0.5
 
     return [round(min,4),round(median,4), round(max,4), round(mean,4), round(std,4)]
-    
+        
     # Input: the dataframe from load_input()
     # Return a list of min, median, max, mean, and standard deviation
 
@@ -738,11 +757,15 @@ Comment on the results you got!
 
 ===== ANSWER Q14a BELOW =====
 
+Baseline large is that fastest temrms of throughput
+
 ===== END OF Q14a ANSWER =====
 
 14b. Which pipeline is faster in terms of latency?
 
 ===== ANSWER Q14b BELOW =====
+
+for loop as a the lower latency.
 
 ===== END OF Q14b ANSWER =====
 
@@ -750,6 +773,8 @@ Comment on the results you got!
 What does this experiment show?
 
 ===== ANSWER Q14c BELOW =====
+
+It was interesting that the for loop was faster in terms of latency but slower in terms of throughput.But k
 
 ===== END OF Q14c ANSWER =====
 """
@@ -764,6 +789,14 @@ had the biggest impact on performance?
 
 ===== ANSWER Q15 BELOW =====
 
+Having a large amount of data seems to have the biggest impact on performance on thoughput looking at 
+graphs 13a we can see the large basline had the highest throuput compared to any of the other one but 
+the outher baslines data sizes where actually slower compared to the forloop.
+
+Also in graph 9a we can see the var and basline had a major diffrecne compared to any of the other 
+sizes of data when the data was large.
+
+
 ===== END OF Q15 ANSWER =====
 
 16.
@@ -775,6 +808,8 @@ This is an open ended question.)
 
 ===== ANSWER Q16 BELOW =====
 
+The bigger the set is the higher throuput it has. As seen in graphs 9a and 13a
+
 ===== END OF Q16 ANSWER =====
 
 17.
@@ -785,6 +820,9 @@ throughput is related to latency.
 This is an open ended question.)
 
 ===== ANSWER Q17 BELOW =====
+
+Latecny is not an import factor if the data set is big enorugh. As we can see in graph 13a the basline pandas pipline was slower
+througput compaed to the small and meduim sets but the througput was fastster for the bigger data set.
 
 ===== END OF Q17 ANSWER =====
 """
