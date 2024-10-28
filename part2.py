@@ -38,7 +38,7 @@ Fill in the add_pipeline, eval_throughput, and generate_plot functions below.
 # Number of times to run each pipeline in the following results.
 # You may modify this if any of your tests are running particularly slow
 # or fast (though it should be at least 10).
-NUM_RUNS = 2
+NUM_RUNS = 10
 class ThroughputHelper:
     def __init__(self):
         # Initialize the object.
@@ -365,32 +365,28 @@ def load_input(filename):
     data_pd = pd.read_csv(filename)
     data_pd_clean =  data_pd[(data_pd["Code"] != "OWID_WRL") & (data_pd["Code"].notna())]
 
-    #ount_per_code = data_pd_clearn.groupby(['Entity']).size().reset_index(name='Count')# remove countries with only one year
+    #data_pd_clean['partition_count'] = data_pd_clean.groupby(['Entity'])['Entity'].transform('count')
 
-    data_pd_clean['partition_count'] = data_pd_clean.groupby(['Entity'])['Entity'].transform('count')
-
-
-    final_daa = data_pd_clean[data_pd_clean['partition_count'] > 1]
-    final_daa = final_daa.drop(columns=['partition_count'])
-    return final_daa
+    #final_daa = data_pd_clean[data_pd_clean['partition_count'] > 1]
+    #final_daa = final_daa.drop(columns=['partition_count'])
+    return data_pd_clean
 
     # Return a dataframe containing the population data
     # **Clean the data here**
 
 def population_pipeline(df):
 
-    print(df.columns)
     groupd_df = df.groupby('Entity').agg(
         Year_Min = ('Year', 'min'),
         Year_Max = ('Year', 'max'),
-        Population_sum = ('Population (historical)', 'min'),
+        Population_sum = ('Population (historical)', 'sum'),
     )
 
-    groupd_df['changge_rate'] =  (groupd_df['Year_Max']   - groupd_df['Year_Min']) / groupd_df['Population_sum']
+    groupd_df['changge_rate'] =  (groupd_df['Year_Max']  - groupd_df['Year_Min']) / groupd_df['Population_sum']
 
     rate = groupd_df['changge_rate']
 
-    return [rate.min(),rate.median(),rate.max(),rate.mean(),rate.std()] 
+    return [round(rate.min(),4), round(rate.median(),4), round(rate.max(),4), round(rate.mean(),4),round(rate.std(),4)] 
     # Input: the dataframe from load_input()
     # Return a list of min, median, max, mean, and standard deviation
 
@@ -594,54 +590,47 @@ Create a new pipeline:
 """
 
 def for_loop_pipeline(df):
-
-    # data_pd_clean =  data_pd[(data_pd["Code"] != "OWID_WRL") & (data_pd["Code"].notna())]
-
+   
     country = df['Entity'].tolist()
-
     code = df['Code'].tolist()
-
     year = df['Year'].tolist()
-
     population = df['Population (historical)'].tolist()
 
+    country_fil = []
+    code_fil = []
+    year_fil = []
+    pop_fil = []
     rate = []
 
-    
-    for i in range(len(country)): # filter out data
-        value =code[i]
+    for i in range(len(country)):
+        if code[i] != 'OWID_WRL' and code[i] is not None:
+            country_fil.append(country[i])  
+            code_fil.append(code[i])        
+            year_fil.append(year[i])        
+            pop_fil.append(population[i])   
 
-        if value != 'OWID_WRL' and  value != None:
-            code.append(value)
-            country.append(country[i])
-            year.append(year[i])
-            population.append(population[i])
-
-
-    for i in set(country):
-
-
-        country_min = float('inf') 
-        country_max = float('-inf') 
-        country_population = 0
+   
+    for i in set(country_fil):
+        country_min = float('inf')
+        country_max = float('-inf')
+        total_population = 0
 
 
-        for j in range(len(country)):
-            if country[j] == i:
+        for j in range(len(country_fil)):
+            if country_fil[j] == i:
+                if year_fil[j] < country_min:
+                    country_min = year_fil[j]
+                if year_fil[j] > country_max:
+                    country_max = year_fil[j]
+                total_population += pop_fil[j]
 
-                if year[j] < country_min:
-                    country_min = year[j]
-
-                if year[j] > country_max:
-                    country_max = year[j]
-
-                country_population += population[j]
-        rate.append((country_max - country_min) / country_population)
-
+        rate.append((country_max - country_min) / total_population)
 
     # summary parts 
 
-    min = 0 
+    rate.sort()
+
+    min = float('inf')
     for i in rate:
         if i < min:
             min = i
@@ -658,10 +647,7 @@ def for_loop_pipeline(df):
         std += (i - mean) ** 2
     std = (std / len(rate)) ** 0.5
 
-    return [min, median, max, mean, std]
- 
-    
-    
+    return [round(min,4),round(median,4), round(max,4), round(mean,4), round(std,4)]
     
     # Input: the dataframe from load_input()
     # Return a list of min, median, max, mean, and standard deviation
@@ -684,16 +670,17 @@ As before, write 4 pipelines based on the datasets from Q7.
 """
 
 def for_loop_small():
-    raise NotImplementedError
+    stats = for_loop_pipeline(load_input_small())
 
 def for_loop_medium():
-    raise NotImplementedError
+    stats = for_loop_pipeline(load_input_medium())
+    
 
 def for_loop_large():
-    raise NotImplementedError
+    stats = for_loop_pipeline(load_input_large())
 
 def for_loop_latency():
-    raise NotImplementedError
+    stats = for_loop_pipeline(load_input_single_row())
 
 def q12():
     # Don't modify this part
@@ -718,13 +705,30 @@ def q13a():
     # Add all 6 pipelines for a throughput comparison
     # Generate plot in ouptut/q13a.png
     # Return list of 6 throughputs
-    raise NotImplementedError
+    b = ThroughputHelper()
+    b.add_pipeline("baseline_small", len(POPULATION_SMALL), baseline_small)
+    b.add_pipeline("baseline_medium", len(POPULATION_MEDIUM), baseline_medium)
+    b.add_pipeline("baseline_large", len(POPULATION_LARGE), baseline_large)
+
+    b.add_pipeline("for_loop_small", len(POPULATION_SMALL), for_loop_small)
+    b.add_pipeline("for_loop_medium", len(POPULATION_MEDIUM), for_loop_medium)
+    b.add_pipeline("for_loop_large", len(POPULATION_LARGE), for_loop_large)
+
+    b.compare_throughput()
+    b.generate_plot("output/q13a.png")
+    return b.throughputs
+
 
 def q13b():
     # Add 2 pipelines for a latency comparison
     # Generate plot in ouptut/q13b.png
     # Return list of 2 latencies
-    raise NotImplementedError
+    a = LatencyHelper()
+    a.add_pipeline("baseline_latency", baseline_latency)
+    a.add_pipeline("for_loop_latency", for_loop_latency)
+    a.compare_latency()
+    a.generate_plot("output/q13b.png")
+    return a.latencies
 
 """
 14.
